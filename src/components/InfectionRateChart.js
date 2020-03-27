@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API } from 'aws-amplify';
 import '../../node_modules/react-vis/dist/style.css';
-import { XYPlot, LineMarkSeries, XAxis, YAxis } from 'react-vis';
+import { FlexibleWidthXYPlot, LineMarkSeries, XAxis, YAxis } from 'react-vis';
 import moment from 'moment';
 
 export default function InfectionRateChart(props) {
@@ -49,15 +49,15 @@ export default function InfectionRateChart(props) {
   }
 
   return (
-    <div className="InfectionRateChart mx-auto mt-3">
+    <div className="InfectionRateChart mx-auto mt-3 col-12 col-md-8">
       <h5 className="text-center">7-Day Trend</h5>
 
-      <XYPlot height={300} width={400} xType='ordinal' yDomain={[0, maxCount]}>
+      <FlexibleWidthXYPlot height={300} xType='ordinal' yDomain={[0, maxCount]}>
         <LineMarkSeries data={testResults
           .slice(testResults.length - props.range, testResults.length)} />
         <XAxis tickLabelAngle={-30} tickFormat={date => moment(date).format("MM/DD")} />
         <YAxis title="Total cases" />
-      </XYPlot>
+      </FlexibleWidthXYPlot>
     </div>
   );
 }
