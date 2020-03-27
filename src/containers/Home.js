@@ -4,6 +4,7 @@ import { API } from "aws-amplify";
 import moment from "moment";
 import "moment-timezone";
 import "./Home.css";
+import InfectionRateChart from "../components/InfectionRateChart";
 
 export default function Home(props) {
   const [testResults, setTestResults] = useState([]);
@@ -85,6 +86,10 @@ export default function Home(props) {
 
       <div className="row">
         {!isLoading && getCurrentSecondary(testResults)}
+      </div>
+
+      <div className="row">
+        <InfectionRateChart range={7} />
       </div>
     </div>
   );
