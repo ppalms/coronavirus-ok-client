@@ -49,8 +49,8 @@ export default function InfectionRateChart(props) {
   }
 
   return (
-    <div className="InfectionRateChart mx-auto mt-3 col-12 col-md-8">
-      <h5 className="text-center">7-Day Trend</h5>
+    <div className="InfectionRateChart mx-auto mt-5 col-12 col-md-8">
+      <h3 className="text-center">7-Day Trend</h3>
 
       <FlexibleWidthXYPlot height={300} xType='ordinal' yDomain={[0, maxCount]}>
         <LineMarkSeries data={testResults
