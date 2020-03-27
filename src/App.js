@@ -11,14 +11,14 @@ function App(props) {
         <LinkContainer to="/">
           <Navbar.Brand><span role="img" aria-label="microbe">🦠</span> COVID-19 in Oklahoma</Navbar.Brand>
         </LinkContainer>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        {/* <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
             <LinkContainer to="/about">
               <Nav.Link>About</Nav.Link>
             </LinkContainer>
           </Nav>
-        </Navbar.Collapse>
+        </Navbar.Collapse> */}
       </Navbar>
 
       <Routes />
