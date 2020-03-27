@@ -52,7 +52,7 @@ export default function Home(props) {
       <div key={currentPositive.resultId} className="col-12 text-center mb-2">
         <Card className="shadow-sm">
           <Card.Body>
-            <Card.Title>{currentPositive.resultType}</Card.Title>
+            <Card.Title>Confirmed</Card.Title>
             <Card.Text className="display-3 text-danger"><strong>{currentPositive.count}</strong></Card.Text>
           </Card.Body>
         </Card>
