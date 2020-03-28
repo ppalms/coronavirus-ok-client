@@ -65,7 +65,7 @@ export default function Home(props) {
       r.resultType === 'Deaths' || r.resultType === 'Hospitalized');
 
     return currentSecondary.map((result, _) =>
-      <div key={result.resultId} className="col-sm-6 text-center mb-2">
+      <div key={result.resultId} className="col-sm-6 text-center mt-2">
         <Card className="shadow-sm">
           <Card.Body>
             <Card.Title>{result.resultType}</Card.Title>
@@ -80,16 +80,28 @@ export default function Home(props) {
     <div className="Home container">
       <h1>Current Cases</h1>
 
+      {
+        isLoading &&
+        <div className="spinner-wrap">
+          <div className="spinner-border text-success spinner" role="status">
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      }
+
       <div className="row">
         {!isLoading && getCurrentPositive(testResults)}
       </div>
 
       <div className="row">
         {!isLoading && getCurrentSecondary(testResults)}
+        <div className="col">
+          {!isLoading && <small className="text-muted">Last updated: {moment(testResults[0].retrievedDate).format("MMMM Do YYYY, h:mm a")}</small>}
+        </div>
       </div>
 
       <div className="row">
-        <InfectionRateChart range={7} />
+        {!isLoading && <InfectionRateChart range={7} />}
       </div>
     </div>
   );
