@@ -49,7 +49,7 @@ export default function Home(props) {
     const currentPositive = testResults.find(r => r.resultType === 'Positive (In-State)');
 
     return (
-      <div key={currentPositive.resultId} className="col-12 text-center mb-2">
+      <div key={currentPositive.resultId} className="col-12 text-center">
         <Card className="shadow-sm">
           <Card.Body>
             <Card.Title>Confirmed</Card.Title>
