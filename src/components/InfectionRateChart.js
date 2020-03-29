@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { API } from 'aws-amplify';
 import '../../node_modules/react-vis/dist/style.css';
-import { FlexibleWidthXYPlot, LineMarkSeries, XAxis, YAxis } from 'react-vis';
+import { FlexibleWidthXYPlot, LineMarkSeries, XAxis, YAxis, Hint } from 'react-vis';
 import moment from 'moment';
 
 export default function InfectionRateChart(props) {
   const [testResults, setTestResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [maxCount, setMaxCount] = useState(100);
+  const [hoverValue, setHoverValue] = useState(false);
 
   useEffect(() => {
     async function onLoad() {
@@ -51,12 +52,24 @@ export default function InfectionRateChart(props) {
   return (
     <div className="InfectionRateChart mx-auto mt-5 col-12 col-md-8">
       <h3 className="text-center">7-Day Trend</h3>
-
       <FlexibleWidthXYPlot height={300} xType='ordinal' yDomain={[0, maxCount]}>
         <LineMarkSeries data={testResults
-          .slice(testResults.length - props.range, testResults.length)} />
+          .slice(testResults.length - props.range, testResults.length)}
+          onValueMouseOver={(datapoint, _event) => setHoverValue(datapoint)}
+          onValueMouseOut={_ => setHoverValue(false)}
+        />
         <XAxis tickLabelAngle={-30} tickFormat={date => moment(date).format("MM/DD")} />
         <YAxis title="Total cases" />
+        {hoverValue &&
+          <Hint value={hoverValue}>
+            <small>
+              <div className="bg-dark rounded text-center text-light p-2" style={{opacity: 0.9}}>
+                <div><strong>{moment(hoverValue.x).format("MMM D")}</strong></div>
+                <div>{hoverValue.y} cases</div>
+              </div>
+            </small>
+          </Hint>
+        }
       </FlexibleWidthXYPlot>
     </div>
   );
