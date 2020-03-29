@@ -98,12 +98,13 @@ export default function Home(props) {
       </div>
 
       <div className="row">
-        {!isLoading && <InfectionRateChart range={7} />}
+        <div className="col-12 col-md-8">
+          {!isLoading && <InfectionRateChart range={7} />}
+        </div>
       </div>
 
-      <div className="mt-3">
-        {!isLoading && <small className="text-muted">Source: <a target="_blank" rel="noopener noreferrer" href="https://coronavirus.health.ok.gov/">Oklahoma State Department of Health</a>.<br />
-          Last updated: {moment(testResults[0].retrievedDate).format("MMMM Do YYYY, h:mm a")}</small>}
+      <div className="my-3">
+        {!isLoading && <small className="text-muted">Last updated: {moment(testResults[0].retrievedDate).format("MMMM Do YYYY, h:mm a")} (<a target="_blank" rel="noopener noreferrer" href="https://coronavirus.health.ok.gov/">source</a>)</small>}
       </div>
     </div>
   );

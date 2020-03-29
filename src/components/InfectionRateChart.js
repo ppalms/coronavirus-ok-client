@@ -50,11 +50,13 @@ export default function InfectionRateChart(props) {
   }
 
   return (
-    <div className="InfectionRateChart mx-auto mt-5 col-12 col-md-8">
+    <div className="InfectionRateChart mx-auto mt-5">
       <h3 className="text-center">7-Day Trend</h3>
       <FlexibleWidthXYPlot height={300} xType='ordinal' yDomain={[0, maxCount]}>
         <LineMarkSeries data={testResults
           .slice(testResults.length - props.range, testResults.length)}
+          style={{ strokeWidth: '3px' }}
+          size={window.innerWidth <= 760 ? "8" : "5"}
           onValueMouseOver={(datapoint, _event) => setHoverValue(datapoint)}
           onValueMouseOut={_ => setHoverValue(false)}
         />
@@ -63,7 +65,7 @@ export default function InfectionRateChart(props) {
         {hoverValue &&
           <Hint value={hoverValue}>
             <small>
-              <div className="bg-dark rounded text-center text-light p-2" style={{opacity: 0.9}}>
+              <div className="bg-dark rounded text-center text-light p-2" style={{ opacity: 0.9 }}>
                 <div><strong>{moment(hoverValue.x).format("MMM D")}</strong></div>
                 <div>{hoverValue.y} cases</div>
               </div>
