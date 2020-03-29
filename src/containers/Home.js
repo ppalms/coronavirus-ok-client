@@ -95,13 +95,15 @@ export default function Home(props) {
 
       <div className="row">
         {!isLoading && getCurrentSecondary(testResults)}
-        <div className="col">
-          {!isLoading && <small className="text-muted">Last updated: {moment(testResults[0].retrievedDate).format("MMMM Do YYYY, h:mm a")}</small>}
-        </div>
       </div>
 
       <div className="row">
         {!isLoading && <InfectionRateChart range={7} />}
+      </div>
+
+      <div className="mt-3">
+        {!isLoading && <small className="text-muted">Source: <a target="_blank" rel="noopener noreferrer" href="https://coronavirus.health.ok.gov/">Oklahoma State Department of Health</a>.<br />
+          Last updated: {moment(testResults[0].retrievedDate).format("MMMM Do YYYY, h:mm a")}</small>}
       </div>
     </div>
   );
