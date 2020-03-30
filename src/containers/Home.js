@@ -45,11 +45,11 @@ export default function Home(props) {
 
   async function getMostRecentResults() {
     let today = moment().format();
-    let results = await API.get("results", `/listResultsStatewide/${today}`);
+    let results = await API.get("results", `/listCasesStatewide/${today}`);
 
     if (results.length === 0) {
       today = moment().subtract(1, 'day').format();
-      results = await API.get("results", `/listResultsStatewide/${today}`);
+      results = await API.get("results", `/listCasesStatewide/${today}`);
     }
 
     return results;
@@ -59,7 +59,7 @@ export default function Home(props) {
     const todayConfirmed = results.find(r => r.resultType === 'Positive (In-State)');
 
     const yesterday = moment(todayConfirmed.retrievedDate).subtract(1, 'day').format();
-    const yesterdayResults = await API.get("results", `/listResultsStatewide/${yesterday}`);
+    const yesterdayResults = await API.get("results", `/listCasesStatewide/${yesterday}`);
     const yesterdayConfirmed = yesterdayResults.find(r => r.resultType === 'Positive (In-State)');
 
     const change = ((todayConfirmed.count - yesterdayConfirmed.count) / yesterdayConfirmed.count * 100).toFixed(2);

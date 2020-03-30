@@ -36,7 +36,7 @@ export default function InfectionRateChart(props) {
   });
 
   async function loadTestResults() {
-    let results = await API.get("results", "/listResultsStatewide");
+    let results = await API.get("results", "/listCasesStatewide");
 
     return results
       .filter(result => result.resultType === 'Positive (In-State)')
