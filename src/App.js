@@ -3,6 +3,10 @@ import { LinkContainer } from "react-router-bootstrap";
 import { Nav, Navbar } from "react-bootstrap";
 import Routes from "./Routes";
 import './App.css';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faInfoCircle, faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faInfoCircle, faArrowUp, faArrowDown);
 
 function App(props) {
   return (
