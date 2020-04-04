@@ -51,8 +51,8 @@ export default function InfectionRateChart(props) {
 
   return (
     <div className="InfectionRateChart mx-auto mt-5">
-      <h3 className="text-center">7-Day Trend</h3>
-      <FlexibleWidthXYPlot height={300} xType='ordinal' yDomain={[0, maxCount]}>
+      <h2>7-Day Trend</h2>
+      <FlexibleWidthXYPlot height={350} xType='ordinal' yDomain={[0, maxCount]}>
         <LineMarkSeries data={testResults
           .slice(testResults.length - props.range, testResults.length)}
           style={{ strokeWidth: '3px' }}
@@ -60,7 +60,7 @@ export default function InfectionRateChart(props) {
           onValueMouseOver={(datapoint, _event) => setHoverValue(datapoint)}
           onValueMouseOut={_ => setHoverValue(false)}
         />
-        <XAxis tickLabelAngle={-30} tickFormat={date => moment(date).format("MM/DD")} />
+        <XAxis tickLabelAngle={-30} tickFormat={date => moment(date).format("MMM D")} />
         <YAxis title="Total cases" />
         {hoverValue &&
           <Hint value={hoverValue}>

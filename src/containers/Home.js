@@ -76,8 +76,8 @@ export default function Home(props) {
     const currentPositive = testResults.find(r => r.resultType === 'Positive (In-State)');
 
     return (
-      <div key={currentPositive.resultType} className="col-12 text-center">
-        <Card className="shadow-sm">
+      <div key={currentPositive.resultType} className="col-md-8 pb-2">
+        <Card className="h-100 shadow-sm pt-md-3">
           <Card.Body>
             <Card.Title>Confirmed</Card.Title>
             <Card.Text>
@@ -98,16 +98,19 @@ export default function Home(props) {
     const currentSecondary = testResults.filter(r =>
       r.resultType === 'Deaths' || r.resultType === 'Hospitalized');
 
-    return currentSecondary.map((result, _) =>
-      <div key={result.resultType} className="col-sm-6 text-center mt-2">
-        <Card className="shadow-sm">
-          <Card.Body>
-            <Card.Title>{result.resultType}</Card.Title>
-            <Card.Text className="text-muted secondary-text"><strong>{result.count}</strong></Card.Text>
-          </Card.Body>
-        </Card>
-      </div>
-    );
+    return (
+      <div className="col-md-4">
+        {currentSecondary.map((result, _) =>
+          <div key={result.resultType} className="pb-2">
+            <Card className="shadow-sm">
+              <Card.Body>
+                <Card.Title>{result.resultType}</Card.Title>
+                <Card.Text className="text-muted secondary-text"><strong>{result.count}</strong></Card.Text>
+              </Card.Body>
+            </Card>
+          </div>
+        )}
+      </div>);
   }
 
   function showRetrievedDate(props) {
@@ -147,11 +150,9 @@ export default function Home(props) {
         </div>
       }
 
-      <div className="row">
+      <div className="d-flex flex-column flex-md-row align-items-stretch text-center">
         {!isLoading && getCurrentPositive(testResults.currentCases)}
-      </div>
 
-      <div className="row">
         {!isLoading && getCurrentSecondary(testResults.currentCases)}
       </div>
 
