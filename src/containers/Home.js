@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Card, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { API } from "aws-amplify";
 import moment from "moment";
 import "moment-timezone";
 import "./Home.css";
 import InfectionRateChart from "../components/InfectionRateChart";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Card, Tooltip, OverlayTrigger } from "react-bootstrap";
+import InfectionRateGrid from "../components/InfectionRateGrid";
 
 export default function Home(props) {
-  const [testResults, setTestResults] = useState([]);
+  const [testResults, setTestResults] = useState({});
   const [confirmedChange, setConfirmedChange] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,8 +20,8 @@ export default function Home(props) {
       }
 
       try {
-        const testResults = await loadData();
-        setTestResults(testResults);
+        const { currentCases, allCases } = await loadData();
+        setTestResults({ currentCases: currentCases, allCases: allCases });
       } catch (e) {
         console.error(e);
       }
@@ -32,15 +33,19 @@ export default function Home(props) {
   });
 
   async function loadData() {
-    const results = await getMostRecentResults();
+    let currentCases = await getMostRecentResults();
 
-    await calculateDailyChange(results);
+    await calculateDailyChange(currentCases);
 
-    return results
+    currentCases = currentCases
       .filter(result =>
         result.resultType === 'Positive (In-State)'
         || result.resultType === 'Deaths'
         || result.resultType === 'Hospitalized');
+
+    const allCases = await API.get("results", "/listCasesStatewide");
+
+    return { currentCases, allCases };
   }
 
   async function getMostRecentResults() {
@@ -109,7 +114,7 @@ export default function Home(props) {
     return (
       <Tooltip id="updated-date-info" {...props}>
         <div>Last updated:</div>
-        <div>{moment(testResults[0].retrievedDate).format("MMM Do YYYY, h:mm a")}</div>
+        <div>{moment(testResults.currentCases[0].retrievedDate).format("MMM Do YYYY, h:mm a")}</div>
       </Tooltip>
     );
   }
@@ -124,12 +129,14 @@ export default function Home(props) {
 
   return (
     <div className="Home container">
-      <h1 style={{ display: "inline-block" }}>Current Cases</h1>
-      <OverlayTrigger placement="top" overlay={showRetrievedDate}>
-        <span className="align-top text-muted" style={{ opacity: "0.8" }}>
-          <FontAwesomeIcon icon="info-circle" size="sm" />
-        </span>
-      </OverlayTrigger>
+      <div className="d-flex justify-content-center">
+        <h1 className="d-inline-block">Current Cases</h1>
+        <OverlayTrigger placement="top" overlay={showRetrievedDate}>
+          <span className="text-muted" style={{ opacity: "0.8" }}>
+            <FontAwesomeIcon icon="info-circle" size="sm" />
+          </span>
+        </OverlayTrigger>
+      </div>
 
       {
         isLoading &&
@@ -141,16 +148,19 @@ export default function Home(props) {
       }
 
       <div className="row">
-        {!isLoading && getCurrentPositive(testResults)}
+        {!isLoading && getCurrentPositive(testResults.currentCases)}
       </div>
 
       <div className="row">
-        {!isLoading && getCurrentSecondary(testResults)}
+        {!isLoading && getCurrentSecondary(testResults.currentCases)}
       </div>
 
       <div className="row">
-        <div className="col-12 col-md-8">
+        <div className="col-12 col-lg-8">
           {!isLoading && <InfectionRateChart range={7} />}
+        </div>
+        <div className="col-12 col-lg-4 mt-3 mt-lg-5">
+          {!isLoading && <InfectionRateGrid data={testResults.allCases} />}
         </div>
       </div>
 
