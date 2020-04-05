@@ -76,7 +76,7 @@ export default function InfectionRateGrid(props) {
 
   const translateResultType = resultType =>
     resultType === 'Positive (In-State)'
-      ? 'Confirmed' : resultType;
+      ? 'Cases' : resultType;
 
   return (
     <div className="InfectionRateGrid">
