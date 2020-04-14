@@ -6,6 +6,8 @@ export default function InfectionRateGrid(props) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const POSITIVE_RESULT_TYPES = ['Positive (In-State)', 'Cases'];
+
   useEffect(() => {
     async function onLoad() {
       if (!isLoading) {
@@ -14,8 +16,7 @@ export default function InfectionRateGrid(props) {
 
       try {
         setData(props.data.filter(x =>
-          x.resultType === 'Positive (In-State)'
-          || x.resultType === 'Deaths'
+          POSITIVE_RESULT_TYPES.includes(x.resultType) || x.resultType === 'Deaths'
         ));
       } catch (e) {
         console.error(e);
@@ -72,11 +73,10 @@ export default function InfectionRateGrid(props) {
     </div>
 
   const sortResults = (a, _b) =>
-    a.resultType === 'Positive (In-State)' ? -1 : 1;
+    POSITIVE_RESULT_TYPES.includes(a.resultType) ? -1 : 1;
 
   const translateResultType = resultType =>
-    resultType === 'Positive (In-State)'
-      ? 'Cases' : resultType;
+    POSITIVE_RESULT_TYPES.includes(resultType) ? 'Cases' : resultType;
 
   return (
     <div className="InfectionRateGrid">
