@@ -13,6 +13,8 @@ export default function Home(props) {
   const [confirmedChange, setConfirmedChange] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
+  const POSITIVE_RESULT_TYPES = ['Positive (In-State)', 'Cases'];
+
   useEffect(() => {
     async function onLoad() {
       if (!isLoading) {
@@ -21,7 +23,8 @@ export default function Home(props) {
 
       try {
         const { currentCases, allCases } = await loadData();
-        setTestResults({ currentCases: currentCases, allCases: allCases });
+        const testResults = { currentCases: currentCases, allCases: allCases };
+        setTestResults(testResults);
       } catch (e) {
         console.error(e);
       }
@@ -36,12 +39,6 @@ export default function Home(props) {
     let currentCases = await getMostRecentResults();
 
     await calculateDailyChange(currentCases);
-
-    currentCases = currentCases
-      .filter(result =>
-        result.resultType === 'Positive (In-State)'
-        || result.resultType === 'Deaths'
-        || result.resultType === 'Hospitalized');
 
     const allCases = await API.get("results", "/listCasesStatewide");
 
@@ -60,8 +57,10 @@ export default function Home(props) {
     return results;
   }
 
+  const getCurrentConfirmed = results => results.find(r => POSITIVE_RESULT_TYPES.includes(r.resultType));
+
   async function calculateDailyChange(results) {
-    const todayConfirmed = results.find(r => r.resultType === 'Positive (In-State)');
+    const todayConfirmed = getCurrentConfirmed(results);
 
     const yesterday = moment(todayConfirmed.retrievedDate).subtract(1, 'day').format();
     const yesterdayResults = await API.get("results", `/listCasesStatewide/${yesterday}`);
@@ -72,8 +71,8 @@ export default function Home(props) {
     setConfirmedChange({ change: change, direction: change > 0 ? 'up' : 'down' });
   }
 
-  function getCurrentPositive(testResults) {
-    const currentPositive = testResults.find(r => r.resultType === 'Positive (In-State)');
+  function getCurrentPositive(currentCases) {
+    const currentPositive = currentCases.find(r => POSITIVE_RESULT_TYPES.includes(r.resultType));
 
     return (
       <div key={currentPositive.resultType} className="col-md-8 pb-2">
@@ -81,7 +80,7 @@ export default function Home(props) {
           <Card.Body>
             <Card.Title>Confirmed</Card.Title>
             <Card.Text>
-              <span className="display-3 text-danger d-block"><strong>{currentPositive.count}</strong></span>
+              <span className="display-3 text-danger d-block"><strong>{parseInt(currentPositive.count).toLocaleString()}</strong></span>
               <OverlayTrigger placement="bottom" overlay={showPercentChangeTooltip}>
                 <span className={`badge badge-${confirmedChange.direction === 'up' ? 'warning' : 'success'}`}>
                   <FontAwesomeIcon icon={`arrow-${confirmedChange.direction}`} /> {confirmedChange.change}%
@@ -94,9 +93,12 @@ export default function Home(props) {
     );
   }
 
-  function getCurrentSecondary(testResults) {
-    const currentSecondary = testResults.filter(r =>
-      r.resultType === 'Deaths' || r.resultType === 'Hospitalized');
+  const getResultTypeTitle = resultType => resultType.includes('Hospital')
+    ? 'Hospitalized' : resultType;
+
+  function getCurrentSecondary(currentCases) {
+    const currentSecondary = currentCases.filter(r =>
+      r.resultType === 'Deaths' || r.resultType.includes('Hospital'));
 
     return (
       <div className="col-md-4">
@@ -104,7 +106,7 @@ export default function Home(props) {
           <div key={result.resultType} className="pb-2">
             <Card className="shadow-sm">
               <Card.Body>
-                <Card.Title>{result.resultType}</Card.Title>
+                <Card.Title>{getResultTypeTitle(result.resultType)}</Card.Title>
                 <Card.Text className="text-muted secondary-text"><strong>{result.count}</strong></Card.Text>
               </Card.Body>
             </Card>
@@ -116,8 +118,11 @@ export default function Home(props) {
   function showRetrievedDate(props) {
     return (
       <Tooltip id="updated-date-info" {...props}>
-        <div>Last updated:</div>
-        <div>{moment(testResults.currentCases[0].retrievedDate).format("MMM Do YYYY, h:mm a")}</div>
+        <small>
+          <div>Last updated:</div>
+          <div>{moment(testResults.currentCases[0].retrievedDate).format("MMM Do YYYY, h:mm a")}.</div>
+          <div>Hospitalization count is cumulative</div>
+        </small>
       </Tooltip>
     );
   }
@@ -125,7 +130,7 @@ export default function Home(props) {
   function showPercentChangeTooltip(props) {
     return (
       <Tooltip id="percent-change-info" {...props}>
-        <div>Daily percent change</div>
+        <small>Daily percentage change</small>
       </Tooltip>
     );
   }
