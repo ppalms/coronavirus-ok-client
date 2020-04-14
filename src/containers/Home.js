@@ -64,7 +64,7 @@ export default function Home(props) {
 
     const yesterday = moment(todayConfirmed.retrievedDate).subtract(1, 'day').format();
     const yesterdayResults = await API.get("results", `/listCasesStatewide/${yesterday}`);
-    const yesterdayConfirmed = yesterdayResults.find(r => r.resultType === 'Positive (In-State)');
+    const yesterdayConfirmed = yesterdayResults.find(r => POSITIVE_RESULT_TYPES.includes(r.resultType));
 
     const change = ((todayConfirmed.count - yesterdayConfirmed.count) / yesterdayConfirmed.count * 100).toFixed(2);
 
