@@ -7,7 +7,7 @@ import moment from 'moment';
 export default function InfectionRateChart(props) {
   const [testResults, setTestResults] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [maxCount, setMaxCount] = useState(100);
+  const [yDomain, setYDomain] = useState({ min: 0, max: 100 });
   const [hoverValue, setHoverValue] = useState(false);
 
   useEffect(() => {
@@ -17,13 +17,19 @@ export default function InfectionRateChart(props) {
       }
 
       try {
-        const results = await loadTestResults();
+        let results = await loadTestResults();
+        results = results.slice(results.length - props.range, results.length);
         setTestResults(results);
 
         if (testResults.length > 0) {
           const counts = testResults.map(result => parseInt(result.y));
-          const maxCount = Math.ceil((Math.max(...counts) + 1) / 10) * 10;
-          setMaxCount(maxCount);
+
+          // Find the next greatest number divisible by 100
+          const maxCount = Math.ceil((Math.max(...counts) + 1) / 100) * 100;
+
+          const minCount = Math.min(...counts) - 100;
+
+          setYDomain({ min: minCount, max: maxCount });
         }
       } catch (e) {
         console.error(e);
@@ -52,9 +58,8 @@ export default function InfectionRateChart(props) {
   return (
     <div className="InfectionRateChart mx-auto mt-5">
       <h2>7-Day Trend</h2>
-      <FlexibleWidthXYPlot height={350} xType='ordinal' yDomain={[0, maxCount]}>
-        <LineMarkSeries data={testResults
-          .slice(testResults.length - props.range, testResults.length)}
+      <FlexibleWidthXYPlot height={350} xType='ordinal' yDomain={[yDomain.min, yDomain.max]}>
+        <LineMarkSeries data={testResults}
           style={{ strokeWidth: '3px' }}
           size={window.innerWidth <= 760 ? "8" : "5"}
           onValueMouseOver={(datapoint, _event) => setHoverValue(datapoint)}
