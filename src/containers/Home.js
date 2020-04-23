@@ -137,6 +137,14 @@ export default function Home(props) {
 
   return (
     <div className="Home container">
+      {
+        !isLoading &&
+        <div>
+          <p className="lead">The <a href="https://coronavirus.health.ok.gov/">Oklahoma Health Department</a> has updated their COVID-19 page to a dashboard view!</p>
+          <p>This site is no longer being updated - please visit <a href="https://coronavirus.health.ok.gov/">https://coronavirus.health.ok.gov/</a>.</p>
+        </div>
+      }
+
       <div className="d-flex justify-content-center">
         <h1 className="d-inline-block">Current Cases</h1>
         <OverlayTrigger placement="top" overlay={showRetrievedDate}>
