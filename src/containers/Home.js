@@ -16,7 +16,7 @@ export default function Home(props) {
   const POSITIVE_RESULT_TYPES = ['Positive (In-State)', 'Cases'];
 
   useEffect(() => {
-    async function onLoad() {
+    const onLoad = async () => {
       if (!isLoading) {
         return;
       }
@@ -35,7 +35,7 @@ export default function Home(props) {
     onLoad();
   });
 
-  async function loadData() {
+  const loadData = async () => {
     let currentCases = await getMostRecentResults();
 
     await calculateDailyChange(currentCases);
@@ -45,7 +45,7 @@ export default function Home(props) {
     return { currentCases, allCases };
   }
 
-  async function getMostRecentResults() {
+  const getMostRecentResults = async () => {
     let today = moment().format();
     let results = await API.get("results", `/listCasesStatewide/${today}`);
 
@@ -59,7 +59,7 @@ export default function Home(props) {
 
   const getCurrentConfirmed = results => results.find(r => POSITIVE_RESULT_TYPES.includes(r.resultType));
 
-  async function calculateDailyChange(results) {
+  const calculateDailyChange = async results => {
     const todayConfirmed = getCurrentConfirmed(results);
 
     const yesterday = moment(todayConfirmed.retrievedDate).subtract(1, 'day').format();
@@ -71,7 +71,7 @@ export default function Home(props) {
     setConfirmedChange({ change: change, direction: change > 0 ? 'up' : 'down' });
   }
 
-  function getCurrentPositive(currentCases) {
+  const getCurrentPositive = currentCases => {
     const currentPositive = currentCases.find(r => POSITIVE_RESULT_TYPES.includes(r.resultType));
 
     return (
@@ -96,7 +96,7 @@ export default function Home(props) {
   const getResultTypeTitle = resultType => resultType.includes('Hospital')
     ? 'Hospitalized' : resultType;
 
-  function getCurrentSecondary(currentCases) {
+  const getCurrentSecondary = currentCases => {
     const currentSecondary = currentCases.filter(r =>
       r.resultType === 'Deaths' || r.resultType.includes('Hospital'));
 
@@ -112,28 +112,23 @@ export default function Home(props) {
             </Card>
           </div>
         )}
-      </div>);
-  }
-
-  function showRetrievedDate(props) {
-    return (
-      <Tooltip id="updated-date-info" {...props}>
-        <small>
-          <div>Last updated:</div>
-          <div>{moment(testResults.currentCases[0].retrievedDate).format("MMM Do YYYY, h:mm a")}.</div>
-          <div>Hospitalization count is cumulative</div>
-        </small>
-      </Tooltip>
+      </div>
     );
   }
 
-  function showPercentChangeTooltip(props) {
-    return (
-      <Tooltip id="percent-change-info" {...props}>
-        <small>Daily percentage change</small>
-      </Tooltip>
-    );
-  }
+  const showRetrievedDate = props =>
+    <Tooltip id="updated-date-info" {...props}>
+      <small>
+        <div>Last updated:</div>
+        <div>{moment(testResults.currentCases[0].retrievedDate).format("MMM Do YYYY, h:mm a")}.</div>
+        <div>Hospitalization count is cumulative</div>
+      </small>
+    </Tooltip>;
+
+  const showPercentChangeTooltip = props =>
+    <Tooltip id="percent-change-info" {...props}>
+      <small>Daily percentage change</small>
+    </Tooltip>;
 
   return (
     <div className="Home container">
