@@ -49,8 +49,8 @@ export default function Home(props) {
     let today = moment().format();
     let results = await API.get("results", `/listCasesStatewide/${today}`);
 
-    if (results.length === 0) {
-      today = moment().subtract(1, 'day').format();
+    while (results.length === 0) {
+      today = moment(today).subtract(1, 'day').format();
       results = await API.get("results", `/listCasesStatewide/${today}`);
     }
 
