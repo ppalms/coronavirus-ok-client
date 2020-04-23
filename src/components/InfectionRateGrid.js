@@ -30,7 +30,7 @@ export default function InfectionRateGrid(props) {
 
   const buildGrid = data => {
     let dailyData = data
-      .filter(x => x.retrievedDate >= moment().startOf('day').subtract(6, 'days').format())
+      .sort((a, b) => new Date(a.retrievedDate) - new Date(b.retrievedDate))
       .reduce((prev, curr) => {
         let day = prev.find(x => x && x.key === curr.retrievedDate);
         if (day) {
@@ -40,9 +40,10 @@ export default function InfectionRateGrid(props) {
         }
 
         return prev;
-      }, []);
+      }, [])
+      .slice(-7);
 
-    dailyData = dailyData.sort((a, b) => new Date(a.key) - new Date(b.key));
+    console.log(dailyData);
 
     return (
       <div className="row row-cols-7">

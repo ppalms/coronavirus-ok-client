@@ -10,6 +10,8 @@ export default function InfectionRateChart(props) {
   const [yDomain, setYDomain] = useState({ min: 0, max: 100 });
   const [hoverValue, setHoverValue] = useState(false);
 
+  const POSITIVE_RESULT_TYPES = ['Positive (In-State)', 'Cases'];
+
   useEffect(() => {
     async function onLoad() {
       if (!isLoading) {
@@ -45,7 +47,7 @@ export default function InfectionRateChart(props) {
     let results = await API.get("results", "/listCasesStatewide");
 
     return results
-      .filter(result => result.resultType === 'Positive (In-State)')
+      .filter(result => POSITIVE_RESULT_TYPES.includes(result.resultType))
       .sort((a, b) => new Date(a.retrievedDate) - new Date(b.retrievedDate))
       .map(result => {
         return {

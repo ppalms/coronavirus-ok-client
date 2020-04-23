@@ -140,7 +140,7 @@ export default function Home(props) {
       {
         !isLoading &&
         <div>
-          <p className="lead">The <a href="https://coronavirus.health.ok.gov/">Oklahoma Health Department</a> has updated their COVID-19 page to a dashboard view!</p>
+          <p className="lead">The <a href="https://coronavirus.health.ok.gov/">Oklahoma State Department of Health</a> has updated their COVID-19 page to a dashboard view!</p>
           <p>This site is no longer being updated - please visit <a href="https://coronavirus.health.ok.gov/">https://coronavirus.health.ok.gov/</a>.</p>
         </div>
       }
