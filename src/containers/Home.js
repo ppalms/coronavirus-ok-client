@@ -93,12 +93,13 @@ export default function Home(props) {
     );
   }
 
-  const getResultTypeTitle = resultType => resultType.includes('Hospital')
-    ? 'Hospitalized' : resultType;
+  const getResultTypeTitle = resultType =>
+    resultType.includes('Hospital')
+      ? 'Hospitalized' : 'Deaths';
 
   const getCurrentSecondary = currentCases => {
     const currentSecondary = currentCases.filter(r =>
-      r.resultType === 'Deaths' || r.resultType.includes('Hospital'));
+      r.resultType === 'Total Cumulative Deaths' || r.resultType === 'Total Cumulative Hospitalizations');
 
     return (
       <div className="col-md-4">
