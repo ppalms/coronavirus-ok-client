@@ -93,9 +93,8 @@ export default function Home(props) {
     );
   }
 
-  const getResultTypeTitle = resultType =>
-    resultType.includes('Hospital')
-      ? 'Hospitalized' : 'Deaths';
+  const getResultTypeTitle = resultType => resultType.includes('Hospital') 
+    ? 'Hospitalized' : 'Deaths';
 
   const getCurrentSecondary = currentCases => {
     const currentSecondary = currentCases.filter(r =>

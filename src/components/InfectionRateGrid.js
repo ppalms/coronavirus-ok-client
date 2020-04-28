@@ -43,8 +43,6 @@ export default function InfectionRateGrid(props) {
       }, [])
       .slice(-7);
 
-    console.log(dailyData);
-
     return (
       <div className="row row-cols-7">
         {dailyData.map((day) => buildGridSquare(day))}
